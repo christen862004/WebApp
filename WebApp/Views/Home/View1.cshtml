@@ -1,0 +1,39 @@
+﻿<h1>Hiiiiiiiiiii from View :)</h1>
+<style>
+    h1{
+        color:red;
+        background-color:yellow;
+        border:2px solid red;
+    }
+</style>
+<script>
+    console.log("hiiiiii");
+</script>
+<!--Razor Engin "Razor synatx undeerstand C#"-->
+<!--Block of Code C#-->
+@{
+    //C# validd c# not render
+    int x = 10;
+    int y = x+10;
+    <h2>hiiiiiii</h2>
+}
+<!--inline statment Code (Ddisply in page)-->
+<h3>@x</h3>
+<h3>@(x+y)</h3>
+
+<!--Condition stament(if ,switch-->
+@if(x>y)
+{
+    <h2>x Greater than Y</h2>
+}
+else
+{
+    <h2>x = @x Less Than Y =@y</h2>
+}
+<!--Iteration (for -while -ddo while -foreach -->
+<ul>
+    @for(int i=0;i<10;i++)
+    {
+        <li>item #@i</li>
+    }
+</ul>
