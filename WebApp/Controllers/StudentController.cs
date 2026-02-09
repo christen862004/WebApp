@@ -5,6 +5,7 @@ namespace WebApp.Controllers
 {
     public class StudentController : Controller
     {
+        
         StudentBL studentBL = new StudentBL();
         //Student/Index
         public IActionResult Index()
@@ -17,6 +18,21 @@ namespace WebApp.Controllers
             //Views/Stuednt/ShowAll
             //Views/Shared/ShowAll
             //exception
+        }
+
+        //using string
+        //Student/Details/1
+        //Student/Details?id=1
+        public IActionResult Details(int id)
+        {
+            Student stdModel= studentBL.GetByID(id);
+            if(stdModel != null)
+            {
+                return View("Details", stdModel);
+
+            }
+            return NotFound();
+            //details ,model type Student
         }
 
     }
