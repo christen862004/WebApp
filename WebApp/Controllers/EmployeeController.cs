@@ -9,6 +9,59 @@ namespace WebApp.Controllers
         {
             context = new ITIContext();
         }
+
+        public IActionResult Index()
+        {
+            List<Employee> empList = context.Employees.ToList();
+            return View("Index", empList);
+        }
+        #region Edit
+        public IActionResult Edit(int id)
+        {
+            //collect
+            Employee EmpFromb = context.Employees.FirstOrDefault(e => e.Id == id);
+            List<Department> DeptList = context.Department.ToList();
+            if(EmpFromb == null)
+            {
+                return NotFound();
+            }
+            //mapping
+            //declare vm object
+            EmpWithDeptListViewModel empVM = new()
+            {
+                Id = EmpFromb.Id,
+                EmpName = EmpFromb.Name,
+                Salary = EmpFromb.Salary,
+                ImageURL = EmpFromb.ImageURL,
+                DepartmentID = EmpFromb.DepartmentID,
+                Email = EmpFromb.Email,
+                DeptList = DeptList
+            };
+            return View("Edit", empVM);//ViewModel
+        }
+        [HttpPost]//EmpName
+        public IActionResult SaveEdit(EmpWithDeptListViewModel EmpFromReq)//create new object - modle binding
+        {
+            if (EmpFromReq.EmpName != null)
+            {
+                Employee empFromDb = context.Employees.FirstOrDefault(e => e.Id == EmpFromReq.Id);
+
+                empFromDb.Salary = EmpFromReq.Salary;
+                empFromDb.Name = EmpFromReq.EmpName;
+                empFromDb.Email = EmpFromReq.Email;
+                empFromDb.DepartmentID = EmpFromReq.DepartmentID;
+                empFromDb.ImageURL = EmpFromReq.ImageURL;
+
+                context.SaveChanges();
+                return RedirectToAction("Index","Employee");
+            }
+
+            
+            EmpFromReq.DeptList = context.Department.ToList();
+            return View("Edit", EmpFromReq);
+        }
+        #endregion
+        #region DEtails
         public IActionResult Details(int id)
         {
             //logic infomation
@@ -53,5 +106,6 @@ namespace WebApp.Controllers
             //send Vm to View
             return View("DetailsVM", EmpVm);//EmpWithBracnshMsgTempColorViewModel
         }
+        #endregion
     }
 }
