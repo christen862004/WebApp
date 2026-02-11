@@ -9,8 +9,15 @@
 @* <input type="hidden" name="id" value="@Model.Id" />     *@
     
     <div>
-        <label for="EmpName">Name</label>
-        <input class="form form-control" name="EmpName" id="EmpName" type="text" value="@Model.EmpName" />
+        @* <label for="EmpName">Name</label> *@
+        @* <input class="form form-control" name="EmpName" id="EmpName" type="text" value="@Model.EmpName" /> *@
+        <!--Pure C# using HTML Helpers-->
+        @* @Html.LabelFor(e=>e.EmpName) *@
+        @* @Html.TextBoxFor(e => e.EmpName, new { style = "color:red",@class="form form-control"}) *@
+        @* @Html.EditorFor(e=>e.EmpName) *@
+
+        <label asp-for="EmpName"></label>
+        <input class="form form-control" asp-for="EmpName"/>
     </div>
     <div>
         <label for="Salary">Salary</label>
@@ -43,4 +50,10 @@
     </div>
     <input type="submit" value="Save" class="btn btn-primary"/>
 </form>
-<a href="/employee/Index">Back To List</a>
+<a href="/employee/Index">Back To List</a>   - 
+@Html.ActionLink("Back To List","Index","Employee") -
+<a asp-action="index" asp-controller="Employee">Back To List</a>
+<hr />
+<a href="/Employee/Details/@Model.Id?name=@Model.EmpName">DEtails</a> -
+@Html.ActionLink("Show Emp Details","DEtails","Employee",new{id=Model.Id,name=Model.EmpName}) -
+<a asp-action="Details" asp-controller="Employee" asp-route-id="@Model.Id" asp-route-name="@Model.EmpName">Details</a>

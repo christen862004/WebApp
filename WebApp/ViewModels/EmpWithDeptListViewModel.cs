@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApp.ViewModels
 {
@@ -6,7 +7,11 @@ namespace WebApp.ViewModels
     {
         //Employee Data
         public int Id { get; set; }
-        public string EmpName { get; set; }
+        //???????????
+        [Display(Name ="Employee Name")]//1)
+        //[DataType(DataType.Password)]//1)determin input type 
+        public string EmpName { get; set; }//2)//2)property type ddetermine input type
+
         public string ImageURL { get; set; }
         public int Salary { get; set; }
         public string? Email { get; set; }

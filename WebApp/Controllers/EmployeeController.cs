@@ -12,9 +12,29 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
-            List<Employee> empList = context.Employees.ToList();
+            List<Employee> empList = context.Employees.ToList();//Take &skip
             return View("Index", empList);
         }
+        #region NEw
+        public IActionResult New()
+        {
+            ViewData["DeptList"] = context.Department.ToList();
+            return View("New");
+        }
+        [HttpPost]//check req method post
+        [ValidateAntiForgeryToken]//if(request.form["_req"].valid
+        public IActionResult SaveNew(Employee EmpFromReq)
+        {
+            if(EmpFromReq.Name!=null& EmpFromReq.Salary > 8000) {
+                context.Employees.Add(EmpFromReq);
+                context.SaveChanges();
+                return RedirectToAction("Index", "Employee");
+            }
+            ViewData["DeptList"] = context.Department.ToList();
+            return View("New", EmpFromReq);
+        }
+        #endregion
+
         #region Edit
         public IActionResult Edit(int id)
         {
@@ -62,7 +82,9 @@ namespace WebApp.Controllers
         }
         #endregion
         #region DEtails
-        public IActionResult Details(int id)
+        //Employee/Details/1?name=ahmed
+        //Employee/Details?name=ahmed&id=1
+        public IActionResult Details(int id,string name)
         {
             //logic infomation
             int temp = 20;
