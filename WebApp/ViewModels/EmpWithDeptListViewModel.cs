@@ -18,6 +18,7 @@ namespace WebApp.ViewModels
 
         public int DepartmentID { get; set; }
         //MErge Model
+        //[Required]
         public List<Department> DeptList { get; set; }
     }
 }

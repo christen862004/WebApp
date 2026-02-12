@@ -15,20 +15,40 @@ namespace WebApp.Controllers
             List<Employee> empList = context.Employees.ToList();//Take &skip
             return View("Index", empList);
         }
+
+        #region Valiadtion Salary
+        public IActionResult CheckSalary(int Salary,string Name)
+        {
+            if (Salary > 8000)
+            {
+                return Json(true);
+            }
+            return Json(false);
+        }
+        #endregion
+
         #region NEw
         public IActionResult New()
         {
             ViewData["DeptList"] = context.Department.ToList();
             return View("New");
         }
+
         [HttpPost]//check req method post
         [ValidateAntiForgeryToken]//if(request.form["_req"].valid
         public IActionResult SaveNew(Employee EmpFromReq)
         {
-            if(EmpFromReq.Name!=null& EmpFromReq.Salary > 8000) {
-                context.Employees.Add(EmpFromReq);
-                context.SaveChanges();
-                return RedirectToAction("Index", "Employee");
+            if(ModelState.IsValid==true)//EmpFromReq.Name!=null& EmpFromReq.Salary > 8000) {
+            {
+                try
+                {
+                    context.Employees.Add(EmpFromReq);
+                    context.SaveChanges();
+                    return RedirectToAction("Index", "Employee");
+                }catch (Exception ex)
+                {
+                    ModelState.AddModelError("any key",ex.InnerException.Message);
+                }
             }
             ViewData["DeptList"] = context.Department.ToList();
             return View("New", EmpFromReq);
@@ -59,6 +79,7 @@ namespace WebApp.Controllers
             };
             return View("Edit", empVM);//ViewModel
         }
+
         [HttpPost]//EmpName
         public IActionResult SaveEdit(EmpWithDeptListViewModel EmpFromReq)//create new object - modle binding
         {
@@ -81,6 +102,8 @@ namespace WebApp.Controllers
             return View("Edit", EmpFromReq);
         }
         #endregion
+
+
         #region DEtails
         //Employee/Details/1?name=ahmed
         //Employee/Details?name=ahmed&id=1
