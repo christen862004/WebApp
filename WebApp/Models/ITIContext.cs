@@ -7,9 +7,14 @@ namespace WebApp.Models
         public DbSet<Employee>  Employees { get; set; }
         public DbSet<Department>  Department { get; set; }
 
-        public ITIContext():base()
+        public ITIContext(DbContextOptions<ITIContext> options) : base(options)
         {
-            
+
+        }
+        //compatablity
+        public ITIContext() : base()
+        {
+
         }
         //DbContext options  "DBMS - server name- auth - database name"
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -1,18 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApp.Repository;
 
 namespace WebApp.Controllers
 {
-    public class EmployeeController : Controller
+    public class EmployeeController : Controller //high level
     {
-        ITIContext context;
-        public EmployeeController()
+        //  ITIContext context;
+        IEmployeeRepository EmployeeRepository;//low level
+        IDepartmentRepository DepartmentRepository;
+        public EmployeeController(IEmployeeRepository _empRepo, IDepartmentRepository _deptRepo)
         {
-            context = new ITIContext();
+            EmployeeRepository=_empRepo;//DI
+            DepartmentRepository=_deptRepo;
+            //context = new ITIContext();
         }
 
         public IActionResult Index()
         {
-            List<Employee> empList = context.Employees.ToList();//Take &skip
+            List<Employee> empList = EmployeeRepository.GetAll();//context.Employees.ToList();//Take &skip
             return View("Index", empList);
         }
 
@@ -30,7 +35,7 @@ namespace WebApp.Controllers
         #region NEw
         public IActionResult New()
         {
-            ViewData["DeptList"] = context.Department.ToList();
+            ViewData["DeptList"] = DepartmentRepository.GetAll();// context.Department.ToList();
             return View("New");
         }
 
@@ -42,15 +47,17 @@ namespace WebApp.Controllers
             {
                 try
                 {
-                    context.Employees.Add(EmpFromReq);
-                    context.SaveChanges();
+                    EmployeeRepository.Add(EmpFromReq);
+                    EmployeeRepository.Save();
+                 //   context.Employees.Add(EmpFromReq);
+                 //   context.SaveChanges();
                     return RedirectToAction("Index", "Employee");
                 }catch (Exception ex)
                 {
                     ModelState.AddModelError("any key",ex.InnerException.Message);
                 }
             }
-            ViewData["DeptList"] = context.Department.ToList();
+            ViewData["DeptList"] = DepartmentRepository.GetAll();
             return View("New", EmpFromReq);
         }
         #endregion
@@ -59,8 +66,8 @@ namespace WebApp.Controllers
         public IActionResult Edit(int id)
         {
             //collect
-            Employee EmpFromb = context.Employees.FirstOrDefault(e => e.Id == id);
-            List<Department> DeptList = context.Department.ToList();
+            Employee EmpFromb = EmployeeRepository.GetById(id);// context.Employees.FirstOrDefault(e => e.Id == id);
+            List<Department> DeptList = DepartmentRepository.GetAll();// context.Department.ToList();
             if(EmpFromb == null)
             {
                 return NotFound();
@@ -85,20 +92,22 @@ namespace WebApp.Controllers
         {
             if (EmpFromReq.EmpName != null)
             {
-                Employee empFromDb = context.Employees.FirstOrDefault(e => e.Id == EmpFromReq.Id);
+                //MApping
 
+                Employee empFromDb = new();// context.Employees.FirstOrDefault(e => e.Id == EmpFromReq.Id);
+                empFromDb.Id = EmpFromReq.Id;//
                 empFromDb.Salary = EmpFromReq.Salary;
                 empFromDb.Name = EmpFromReq.EmpName;
                 empFromDb.Email = EmpFromReq.Email;
                 empFromDb.DepartmentID = EmpFromReq.DepartmentID;
                 empFromDb.ImageURL = EmpFromReq.ImageURL;
-
-                context.SaveChanges();
+                EmployeeRepository.Update(empFromDb);
+                EmployeeRepository.Save();
                 return RedirectToAction("Index","Employee");
             }
 
-            
-            EmpFromReq.DeptList = context.Department.ToList();
+
+            EmpFromReq.DeptList = DepartmentRepository.GetAll();
             return View("Edit", EmpFromReq);
         }
         #endregion
@@ -123,7 +132,7 @@ namespace WebApp.Controllers
 
 
 
-            Employee empModel = context.Employees.FirstOrDefault(e => e.Id == id);
+            Employee empModel = EmployeeRepository.GetById(id);
             return View("Details",empModel);
             //crate view ,send Model,send ViewData
         }
@@ -134,7 +143,8 @@ namespace WebApp.Controllers
             int temp = 20;
             string msg = "Hello from Back";
             List<string> branches = new List<string>() { "Alex", "Cairo", "Sohag", "Assiut", "Monofia" };
-            Employee empModel = context.Employees.FirstOrDefault(e => e.Id == id);
+            Employee empModel = EmployeeRepository.GetById(id);
+
 
             //decalre VM
             EmpWithBracnshMsgTempColorViewModel EmpVm = new() { 

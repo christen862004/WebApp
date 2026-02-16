@@ -1,5 +1,66 @@
 ﻿namespace WebApp.Models
 {
+    //DIP IOC
+    interface ISort
+    {
+        void Sort(int[] Arr);
+    }
+    class ChrisSort : ISort
+    {
+        public void Sort(int[] Arr)
+        {
+           
+        }
+    }
+    class SelectionSort:ISort
+    {
+        public void Sort(int[] arr)
+        {
+
+        }
+    }
+    class BubbleSort:ISort
+    {
+        public void Sort(int[] arr)
+        {
+
+        }
+    }
+
+
+
+    //MyList High level + BubbleSort Low Level   (IOC ) tigh couple
+    class MyList
+    {
+        int[] arr;
+        ISort sortAl;
+        public MyList(ISort _sort)//dependency Inject
+        {
+            arr = new int[10];
+            sortAl = _sort;//new BubbleSort();//dont create but ask (Ctor  | mehtod)
+        }
+        public void sortAsc()//ISort _al)
+        {
+            sortAl.Sort(arr);
+        }
+    }
+    class Test2
+    {
+        public void test()
+        {
+            MyList l1 = new MyList(new BubbleSort());
+            MyList l2 = new MyList(new SelectionSort());
+            MyList l3 = new MyList(new ChrisSort());
+        }
+    }
+
+
+
+
+
+
+
+
     class TestView
     {
         object data;//
@@ -15,9 +76,6 @@
             set { data = value; }
         }
     }
-
-
-
     class Parent<T>
     {
         public T Data { get; set; }

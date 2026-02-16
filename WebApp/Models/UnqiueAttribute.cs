@@ -4,9 +4,11 @@ namespace WebApp.Models
 {
     public class UnqiueAttribute:ValidationAttribute
     {
-        ITIContext context = new ITIContext();
+        ITIContext context= new ITIContext();
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
+            //context=validationContext.getre
+
             Employee EmpFromRequest = validationContext.ObjectInstance as Employee;//retirn obj from requesr
 
 
