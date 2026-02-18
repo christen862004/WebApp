@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApp.Repository;
 
 namespace WebApp.Controllers
@@ -14,6 +15,9 @@ namespace WebApp.Controllers
             DepartmentRepository=_deptRepo;
             //context = new ITIContext();
         }
+
+        //  [AllowAnonymous]
+        [Authorize]
 
         public IActionResult Index()
         {

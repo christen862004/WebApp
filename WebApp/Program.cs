@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using WebApp.Filtters;
 using WebApp.Repository;
 
 namespace WebApp
@@ -12,12 +13,19 @@ namespace WebApp
             // Add services to the container.
             // buit in service already register
             // built in service need to register (optional service)
+            //builder.Services.AddControllersWithViews(options => {
+            //    options.Filters.Add(new HandelErrorAttribute());//Global attaibute
+            //});
+
             builder.Services.AddControllersWithViews();
             //DbContextOptions , ITIContext register
             builder.Services.AddDbContext<ITIContext>(optionBuilder => { 
                 optionBuilder.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
             });
-
+            builder.Services.AddSession(option =>
+            {
+                option.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
 
             // Cutom Service 
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();//register
@@ -52,14 +60,16 @@ namespace WebApp
             }
             app.UseStaticFiles();//path wwroot call next
 
-            app.UseRouting();//Mapping Security
+            app.UseRouting();//Mapping Security (rout1 ,rout2 ,edfault)
+
+            app.UseSession();//need to inject some service "built in service needd to registe"
 
             app.UseAuthorization();
 
-            //Declare Route and execute
+            //Declare Route and execute mnaming convention rout
             //app.MapControllerRoute("Route1", "r1/{id:int:range(20,60)}/{name?}", new { controller = "Route", action = "Method1" });//
             //app.MapControllerRoute("Route1", "r1", new { controller = "Route", action = "Method1" });//
-            //app.MapControllerRoute("Route2", "r2", new { controller = "Route", action = "Method2" });
+            app.MapControllerRoute("Route2", "r2", new { controller = "Route", action = "Method2" });
             //app.MapControllerRoute("Route2", "{contoller}/{action}", new { controller = "Route", action = "Method2" });
 
 
