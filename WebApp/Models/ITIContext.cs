@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Models
 {
-    public class ITIContext:DbContext
+    public class ITIContext:IdentityDbContext<ApplicationUser>
     {
         public DbSet<Employee>  Employees { get; set; }
         public DbSet<Department>  Department { get; set; }
@@ -22,5 +23,9 @@ namespace WebApp.Models
             optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=M9M46;Integrated Security=True;Encrypt=False;Trust Server Certificate=True");
             base.OnConfiguring(optionsBuilder);
         }
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    //base.OnModelCreating(builder);//<--identity Updat database
+        //}
     }
 }

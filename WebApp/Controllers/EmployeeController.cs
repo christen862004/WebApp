@@ -18,7 +18,6 @@ namespace WebApp.Controllers
 
         //  [AllowAnonymous]
         [Authorize]
-
         public IActionResult Index()
         {
             List<Employee> empList = EmployeeRepository.GetAll();//context.Employees.ToList();//Take &skip

@@ -1,3 +1,5 @@
+
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Filtters;
 using WebApp.Repository;
@@ -26,6 +28,12 @@ namespace WebApp
             {
                 option.IdleTimeout = TimeSpan.FromMinutes(30);
             });
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+            }).AddEntityFrameworkStores<ITIContext>();
 
             // Cutom Service 
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();//register

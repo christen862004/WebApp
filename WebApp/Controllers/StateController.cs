@@ -1,10 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Security.Claims;
 
 namespace WebApp.Controllers
 {
     public class StateController : Controller
     {
+        //MEthod 
+        //[Authorize]
+        public IActionResult WelcomeMsg()
+        {
+            //auth Weleome Ghada
+            if (User.Identity.IsAuthenticated) {
+                //User.IsInRole("Admin");
+
+                Claim idClaim= User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                string id = idClaim.Value;
+
+                Claim AddressClaim = User.Claims.FirstOrDefault(c => c.Type == "Address");
+                return Content($"Welcome {User.Identity.Name} with idd={id} \n Address={AddressClaim.Value}");
+            }
+            //gust Welcome Gust
+            return Content("Welcome Gust");
+        }
+
+
         //state/setsession?age=1&name=ahmed
         public IActionResult SetSession(int age,string name)
         {
